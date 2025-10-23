@@ -19,7 +19,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 const upload = multer({ storage: multer.memoryStorage() });
 
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
 app.get('/', (req, res) => {
@@ -30,7 +30,6 @@ app.get('/', (req, res) => {
 app.post('/upload', upload.single('csvfile'), (req, res) => {
   const password = req.body.password;
 
- 
   if (password != ADMIN_PASSWORD) {
     return res.status(401).send('Unauthorized: Wrong password!');
   }
