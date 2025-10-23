@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Upload CSV</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Admin CSV Upload</h1>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+      <label class="block mb-2 font-medium">Admin Password:</label>
+      <input type="password" name="password" required class="w-full mb-4 px-3 py-2 border rounded-lg">
+
+      <label class="block mb-2 font-medium">CSV File:</label>
+      <input type="file" name="csvfile" accept=".csv" required class="w-full mb-4">
+
+      <button type="submit"
+        class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+        Upload CSV
+      </button>
+    </form>
+
+    <p id="status" class="mt-4 text-center font-medium"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      status.textContent = "Uploading...";
+      try {
+        const res = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const text = await res.text();
+        status.textContent = text;
+        status.classList.toggle('text-red-600', res.status !== 200);
+        status.classList.toggle('text-green-600', res.status === 200);
+      } catch (err) {
+        status.textContent = "Error uploading file.";
+        status.classList.add('text-red-600');
+      }
+    });
+  </script>
+</body>
+</html>
